@@ -4,23 +4,26 @@ using System;
 using System.Globalization;
 using System.IO;
 using HarmonyLib;
+using RoR2;
 using R2API.Utils;
 
 namespace x753
 {
     [NetworkCompatibility(CompatibilityLevel.NoNeedForSync)]
-    [BepInPlugin("com.x753.AudioEngineFix", "Audio Engine Fix", "1.0.0")]
+    [BepInPlugin("com.x753.AudioEngineFix", "Audio Engine Fix", "1.0.3")]
     public class AudioEngineFix : BaseUnityPlugin
     {
         public void Awake()
         {
+            Debug.Log("Awake() has run in AudioEngineFix.cs");
+
             On.RoR2.UI.MainMenu.MainMenuController.Start += (orig, self) =>
             {
                 orig(self);
 
-                byte[] oldBytePattern = BytePatternUtilities.ConvertHexStringToByteArray("01010000000000000F0100000100000004000000000000001F00000048696464");
+                byte[] oldBytePattern = BytePatternUtilities.ConvertHexStringToByteArray("2000000000000000000000000101000000000000EB0000000100000005000000000000001F0000004869");
 
-                byte[] newBytePattern = BytePatternUtilities.ConvertHexStringToByteArray("00010000000400000F0100000100000004000000000000001F00000048696464");
+                byte[] newBytePattern = BytePatternUtilities.ConvertHexStringToByteArray("2000000000000000000000000001000000000000EB0000000100000005000000000000001F0000004869");
 
                 byte[] allBytes = File.ReadAllBytes(Environment.CurrentDirectory + @"\Risk of Rain 2_Data\globalgamemanagers");
                 // Replace the section of binary containing audio engine settings for the globalgamemanagers file in order to reenable the Unity Audio Engine.
